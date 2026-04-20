@@ -1,69 +1,45 @@
 package com.ll;
 
+import java.util.ArrayList;
+
 public class Calc {
     public static int run(String expression) {
         String[] expressionBits = expression.split(" ");
+        ArrayList<Integer> numList = new ArrayList<>();
+        ArrayList<String> opList = new ArrayList<>();
 
-        int num1 = Integer.parseInt(expressionBits[0]);
-        int num2 = Integer.parseInt(expressionBits[2]);
-
-        if (expressionBits[1].equals("+")) {
-            if (expressionBits.length == 5) {
-                int num3 = Integer.parseInt(expressionBits[4]);
-                if (expressionBits[1].equals("+") && expressionBits[3].equals("+")) {
-                    return num1 + num2 + num3;
-                } else if (expressionBits[1].equals("-") && expressionBits[3].equals("-")) {
-                    return num1 - num2 - num3;
-                } else if (expressionBits[1].equals("+") && expressionBits[3].equals("-")) {
-                    return num1 + num2 - num3;
-                } else if (expressionBits[1].equals("-") && expressionBits[3].equals("+")) {
-                    return num1 - num2 + num3;
-                }
+        for (int i = 0; i < expressionBits.length; i++) {
+            if (i % 2 == 0) {
+                numList.add(Integer.parseInt(expressionBits[i]));
+            } else {
+                opList.add(expressionBits[i]);
             }
-            return num1 + num2;
-        } else if (expressionBits[1].equals("-")) {
-            if (expressionBits.length == 5) {
-                int num3 = Integer.parseInt(expressionBits[4]);
-                if (expressionBits[1].equals("+") && expressionBits[3].equals("+")) {
-                    return num1 + num2 + num3;
-                } else if (expressionBits[1].equals("-") && expressionBits[3].equals("-")) {
-                    return num1 - num2 - num3;
-                } else if (expressionBits[1].equals("+") && expressionBits[3].equals("-")) {
-                    return num1 + num2 - num3;
-                } else if (expressionBits[1].equals("-") && expressionBits[3].equals("+")) {
-                    return num1 - num2 + num3;
-                }
-            }
-            return num1 - num2;
-        } else if (expressionBits[1].equals("*")) {
-            if(expressionBits.length == 5) {
-                int num3 = Integer.parseInt(expressionBits[4]);
-                if (expressionBits[1].equals("*") && expressionBits[3].equals("*")) {
-                    return num1 * num2 * num3;
-                } else if (expressionBits[1].equals("/") && expressionBits[3].equals("/")) {
-                    return num1 / num2 / num3;
-                } else if (expressionBits[1].equals("*") && expressionBits[3].equals("/")) {
-                    return num1 * num2 / num3;
-                } else if (expressionBits[1].equals("/") && expressionBits[3].equals("*")) {
-                    return num1 / num2 * num3;
-                }
-            }
-            return num1 * num2;
-        } else if (expressionBits[1].equals("/")) {
-            if(expressionBits.length == 5) {
-                int num3 = Integer.parseInt(expressionBits[4]);
-                if (expressionBits[1].equals("*") && expressionBits[3].equals("*")) {
-                    return num1 * num2 * num3;
-                } else if (expressionBits[1].equals("/") && expressionBits[3].equals("/")) {
-                    return num1 / num2 / num3;
-                } else if (expressionBits[1].equals("*") && expressionBits[3].equals("/")) {
-                    return num1 * num2 / num3;
-                } else if (expressionBits[1].equals("/") && expressionBits[3].equals("*")) {
-                    return num1 / num2 * num3;
-                }
-            }
-            return num1 / num2;
         }
-        return 0;
+
+        for (int i = 0; i < opList.size(); i++) {
+            if (opList.get(i).equals("*")) {
+                int result = numList.get(i) * numList.get(i + 1);
+                numList.remove(i + 1);
+                numList.set(i, result);
+                opList.remove(i);
+                i--;
+            }
+        }
+        for (int i = 0; i < opList.size(); i++) {
+            if (opList.get(i).equals("+")) {
+                int result = numList.get(i) + numList.get(i + 1);
+                numList.set(i, result);
+                numList.remove(i + 1);
+                opList.remove(i);
+                i--;
+            }else if (opList.get(i).equals("-")) {
+                int result = numList.get(i) - numList.get(i + 1);
+                numList.set(i, result);
+                numList.remove(i + 1);
+                opList.remove(i);
+                i--;
+            }
+        }
+        return numList.get(0);
     }
 }
